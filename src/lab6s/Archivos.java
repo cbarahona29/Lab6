@@ -8,8 +8,6 @@ package lab6s;
  *
  * @author danilos
  */
-public class Main {
-    public static void main(String[] args) {
-        new EditorGUI();
-    }
+public class Archivos {
+    
 }
