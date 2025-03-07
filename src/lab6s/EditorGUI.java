@@ -75,13 +75,15 @@ public class EditorGUI {
         toolBar.add(new JLabel("Tamaño: "));
         toolBar.add(sizeSelector);
         
-        // Botón "Guardar" simplificado
+        
         toolBar.addSeparator(new Dimension(10, 10));
         JButton guardarButton = new JButton("Guardar");
         guardarButton.setPreferredSize(new Dimension(80, 30));
         guardarButton.addActionListener(e -> {
-            // Guarda el contenido en un archivo "salida.txt" en la raíz del proyecto
-            File archivoSalida = new File("salida.docx");
+            
+            String name; 
+            name = JOptionPane.showInputDialog("Escriba el nombre del archivo");
+            File archivoSalida = new File(name+".txt");
             try (FileWriter escritor = new FileWriter(archivoSalida)) {
                 escritor.write(textPanel.getText());
                 escritor.flush();
