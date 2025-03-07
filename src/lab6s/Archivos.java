@@ -1,37 +1,35 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package lab6s;
-
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.rtf.RTFEditorKit;
 
-/**
- *
- * @author danilos
- */
 public class Archivos {
-
-    public String openFile(File file) throws IOException {
-        // Crea un flujo de entrada para el archivo
-        try {
-            FileReader reader = new FileReader(file);
-            StringBuilder content = new StringBuilder();
-            int caracter = 0;
-
-            // Lee el archivo línea por línea
-            while ((caracter = reader.read()) != -1) {
-                content.append((char) caracter).append("\n");
+    public String abrirArchivo(File archivo) throws IOException {
+        if (archivo.getName().toLowerCase().endsWith(".rtf")) {
+            try (FileInputStream fis = new FileInputStream(archivo)) {
+                JTextPane panelTemporal = new JTextPane();
+                RTFEditorKit kitRTF = new RTFEditorKit();
+                Document doc = kitRTF.createDefaultDocument();
+                panelTemporal.setDocument(doc);
+                
+                kitRTF.read(fis, doc, 0);
+                
+                return doc.getText(0, doc.getLength());
+            } catch (BadLocationException e) {
+                throw new IOException("Error al procesar el archivo RTF: " + archivo.getName(), e);
             }
-
-            // Coloca el contenido del archivo en el JTextPane
-            return String.valueOf(content);
-        } catch (IOException e) {
-            throw new IOException("Error al abrir el archivo: " + file.getName(), e);
+        } else {
+            try (FileInputStream fis = new FileInputStream(archivo)) {
+                byte[] datos = new byte[(int) archivo.length()];
+                fis.read(datos);
+                return new String(datos, "UTF-8");
+            } catch (IOException e) {
+                throw new IOException("Error al abrir el archivo: " + archivo.getName(), e);
+            }
         }
     }
 }
